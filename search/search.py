@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+
 
 class SearchProblem:
     """
@@ -70,7 +71,8 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
@@ -88,11 +90,14 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
+    # A visited set stores the visited states
     visited = set()
     if(problem.isGoalState(problem.getStartState())):
         return []
     s = problem.getStartState()
+    # A stack(DFS) to store state and its corresponding path
     st = util.Stack()
+    # A list to store path to the current state being worked upon
     Ans = []
     st.push([s, Ans])
 
@@ -109,19 +114,24 @@ def depthFirstSearch(problem):
                     if (i in visited) == True:
                         continue
                     else:
+                        # Cocatenate the path to the sucessor node with path to its parent
                         st.push([i, y + [j]])
 
     util.raiseNotDefined()
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
 
+    # A visited set stores the visited states
     visited = set()
     if(problem.isGoalState(problem.getStartState())):
         return []
     s = problem.getStartState()
+    # A queue(BFS) to store state and its corresponding path
     que = util.Queue()
+    # A list to store path to the current state being worked upon
     Ans = []
     que.push([s, Ans])
 
@@ -138,19 +148,25 @@ def breadthFirstSearch(problem):
                     if (i in visited) == True:
                         continue
                     else:
+                        # Cocatenate the path to the sucessor node with path to its parent
                         que.push([i, y + [j]])
 
     util.raiseNotDefined()
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
 
+    # A visited set stores the visited states
     visited = set()
     if(problem.isGoalState(problem.getStartState())):
         return []
     s = problem.getStartState()
+    # A Priority Queue(UCS) to store state and its corresponding path,
+    # where priority being the cost of the path
     pq = util.PriorityQueue()
+    # A list to store path to the current state being worked upon
     Ans = []
     Cost = 0
     pq.push([s, Ans, Cost], Cost)
@@ -168,9 +184,12 @@ def uniformCostSearch(problem):
                     if (i in visited) == True:
                         continue
                     else:
+                        # Cocatenate the path to the sucessor node with path to its parent,
+                        # and the cost of current state to the cost of the path
                         pq.push([i, y + [j], z + k], z + k)
 
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -179,17 +198,22 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
 
+    # A visited set stores the visited states
     visited = set()
     if(problem.isGoalState(problem.getStartState())):
         return []
     s = problem.getStartState()
+    # A Priority Queue(UCS) to store state and its corresponding path,
+    # where priority being the heuristic function
     pq = util.PriorityQueue()
+    # A list to store path to the current state being worked upon
     Ans = []
-    pq.push([s, Ans, heuristic(s,problem)], heuristic(s,problem))
+    pq.push([s, Ans, heuristic(s, problem)], heuristic(s, problem))
 
     while pq.isEmpty() == False:
         x, y, z = pq.pop()
@@ -204,7 +228,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     if (i in visited) == True:
                         continue
                     else:
-                        pq.push([i, y + [j], heuristic(i,problem) + problem.getCostOfActions(y + [j])], heuristic(i,problem) + problem.getCostOfActions(y + [j]))
+                        # Cocatenate the path to the sucessor node with path to its parent,
+                        # the cost of current state to the cost of the path, and update the heuristic
+                        pq.push([i, y + [j], heuristic(i, problem) + problem.getCostOfActions(
+                            y + [j])], heuristic(i, problem) + problem.getCostOfActions(y + [j]))
 
     util.raiseNotDefined()
 

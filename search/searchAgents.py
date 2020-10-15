@@ -295,6 +295,9 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        
+        # A state represents the tuple of starting position,
+        # ans the number of corner foods left to eat
         return (self.startingPosition, self.corners)
 
         util.raiseNotDefined()
@@ -304,6 +307,7 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
+
         if len(state[1]) == 0:
             return True
         else:
@@ -334,11 +338,14 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+
             if self.walls[nextx][nexty] == False:
                 nextpos = (nextx, nexty)
                 cost = 1
 
                 if nextpos in corners:
+                    # If a corner is reached,
+                    # remove it from the remaining corners list
                     nextcor = list(corners)
                     nextcor.remove(nextpos)
                     nextcor = tuple(nextcor)
@@ -362,8 +369,6 @@ class CornersProblem(search.SearchProblem):
             if self.walls[x][y]: return 999999
         return len(actions)
 
-manhattan = lambda x1, y1, x2, y2: abs(x1 - x2) + abs(y1 - y2)
-
 def cornersHeuristic(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
@@ -381,6 +386,7 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+
     corners = list(state[1])
     curr = state[0]
     h = 0
@@ -389,7 +395,9 @@ def cornersHeuristic(state, problem):
         if curr in corners:
             return 0
         for corner in corners:
-            distance.append(util.manhattanDistance(curr,corner))
+            distance.append(util.manhattanDistance(curr, corner))
+        # The heuristic used here is the shortest manhattan distance
+        # from the current state to the unvisited corners
         h += min(distance)
         curr = corners[distance.index(min(distance))]
         corners.remove(curr)
@@ -490,15 +498,15 @@ def foodHeuristic(state, problem):
     foodList = foodGrid.asList()
 
     "*** YOUR CODE HERE ***"
+
     if len(foodList) == 0:
         return 0
-    
-    if position in foodList:
-        foodList.remove(position)
 
     distance = []
     for food in foodList:
-        distance.append(util.manhattanDistance(food,position))
+        distance.append(mazeDistance(food, position, problem.startingGameState))
+    # The heursitic used here is the actual distance that pacman travels
+    # from the current position to the farthest unvisited food
     next = max(distance)
     distance.remove(next)
     return next
@@ -532,6 +540,8 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
+
+        # A simple Breadth gitFirst Search for eating all the food
         return search.breadthFirstSearch(problem)
 
         util.raiseNotDefined()
@@ -570,6 +580,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
+
         if (x,y) in self.food.asList():
             return True
         else:
